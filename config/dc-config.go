@@ -3,12 +3,13 @@ package config
 import (
 	"fmt"
 	"os"
-
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
+
+// openConnection to the database from the app
 func SetupDatabaseConnection() *gorm.DB{
 	err := godotenv.Load()
 	if err != nil{
@@ -21,8 +22,12 @@ func SetupDatabaseConnection() *gorm.DB{
 	db_name := os.Getenv("db_name")
 
 
+	//root:Temi@tope48@tcp(localhost:3306)/golang_api?charset=utf8&parseTime=True&loc=Local
 	dsn := fmt.Sprint("%s:%s@tcp(%s:3306)/%s?charset=utf8&parseTime=True&loc=Local", db_user, db_password, dbHost, db_name)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	//TODO format the dsn string
+	fmt.Println(dsn)
+	db, err := gorm.Open(mysql.Open("root:Temi@tope48@tcp(localhost:3306)/golang_api?charset=utf8&parseTime=True&loc=Local"), &gorm.Config{})
 
 	if err != nil {
 		panic("Failed to create a connection to database")
@@ -31,6 +36,14 @@ func SetupDatabaseConnection() *gorm.DB{
 	return db
 }
 
+
+//close connection to the database form your app
 func CloseDatabaseConnection(db *gorm.DB) {
-	
+	dbSql, err := db.DB()
+
+	if err != nil {
+		panic("Failed to create a connection from database")
+	}
+
+	dbSql.Close()
 }
