@@ -12,7 +12,7 @@ import (
 
 type AuthService interface{
 	VerifyCredentials(email string, password string) interface{}
-	CreateUser(user dto.CreateUserDTO) entity.User
+	CreateUser(user dto.RegisterDTO) entity.User
 	FindByEmail(email string) entity.User
 	IsDuplicateEmail (email string) bool
 }
@@ -37,7 +37,7 @@ func (service *authService) VerifyCredentials(email string, password string) int
 	return false
 }
 
-func (service *authService) CreateUser(user dto.CreateUserDTO) entity.User{
+func (service *authService) CreateUser(user dto.RegisterDTO) entity.User{
 	userToCreate := entity.User{}
 	err := smapping.FillStruct(&userToCreate, smapping.MapFields(&user))
 
@@ -53,7 +53,8 @@ func (service *authService) FindByEmail(email string) entity.User{
 }
 
 func (service *authService) IsDuplicateEmail(email string) bool{
-	res := service.userRepository.
+	res := service.userRepository.IsDuplicateEmail(email)
+	return !(res.Error == nil)
 }
 
 func comparePassword(hashedPassword string, password []byte) bool {

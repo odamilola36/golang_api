@@ -3,11 +3,12 @@ package config
 import (
 	"fmt"
 	"os"
+
 	"github.com/joho/godotenv"
+	"github.com/odamilola36/golang_api/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
-
 
 // openConnection to the database from the app
 func SetupDatabaseConnection() *gorm.DB{
@@ -33,6 +34,7 @@ func SetupDatabaseConnection() *gorm.DB{
 		panic("Failed to create a connection to database")
 	}
 
+	db.AutoMigrate(entity.User{}, &entity.Book{})
 	return db
 }
 
