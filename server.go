@@ -5,8 +5,6 @@ import (
 	"github.com/odamilola36/golang_api/config"
 	"github.com/odamilola36/golang_api/controller"
 	"github.com/odamilola36/golang_api/middleware"
-
-	// "github.com/odamilola36/golang_api/middleware"
 	"github.com/odamilola36/golang_api/repositories"
 	"github.com/odamilola36/golang_api/service"
 	"gorm.io/gorm"
@@ -33,7 +31,7 @@ func main (){
 
 	userRoutes := r.Group("/api/user", middleware.AuthorizeJwt(jwtService))
 	{
-		userRoutes.POST("/update", userController.UpdateUser)
+		userRoutes.PUT("/profile", userController.UpdateUser)
 		userRoutes.GET("/profile", userController.Profile)
 	}
 
