@@ -10,11 +10,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthService interface{
+type AuthService interface {
 	VerifyCredentials(email string, password string) interface{}
 	CreateUser(user dto.RegisterDTO) entity.User
 	FindByEmail(email string) entity.User
-	IsDuplicateEmail (email string) bool
+	IsDuplicateEmail(email string) bool
 }
 
 type authService struct {
@@ -25,19 +25,19 @@ func NewAuthService(userRep repositories.UserRepository) AuthService {
 	return &authService{userRepository: userRep}
 }
 
-func (service *authService) VerifyCredentials(email string, password string) interface{}{
+func (service *authService) VerifyCredentials(email string, password string) interface{} {
 	res := service.userRepository.VerifyCredentials(email, password)
 	if v, ok := res.(entity.User); ok {
-		comparePassword := comparePassword(v.Password, [] byte(password))
+		comparePassword := comparePassword(v.Password, []byte(password))
 		if v.Email == email && comparePassword {
-			return true
+			return res
 		}
 		return false
 	}
 	return false
 }
 
-func (service *authService) CreateUser(user dto.RegisterDTO) entity.User{
+func (service *authService) CreateUser(user dto.RegisterDTO) entity.User {
 	userToCreate := entity.User{}
 	err := smapping.FillStruct(&userToCreate, smapping.MapFields(&user))
 
@@ -48,11 +48,11 @@ func (service *authService) CreateUser(user dto.RegisterDTO) entity.User{
 	return res
 }
 
-func (service *authService) FindByEmail(email string) entity.User{
+func (service *authService) FindByEmail(email string) entity.User {
 	return service.userRepository.FindByEmail(email)
 }
 
-func (service *authService) IsDuplicateEmail(email string) bool{
+func (service *authService) IsDuplicateEmail(email string) bool {
 	res := service.userRepository.IsDuplicateEmail(email)
 	return !(res.Error == nil)
 }

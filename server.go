@@ -11,16 +11,16 @@ import (
 )
 
 var (
-	db *gorm.DB = config.SetupDatabaseConnection()
+	db             *gorm.DB                    = config.SetupDatabaseConnection()
 	userRepository repositories.UserRepository = repositories.NewUserRepository(db)
-	authService service.AuthService = service.NewAuthService(userRepository)
-	jwtService service.Jwtservice = service.NewJWTService()
-	userService service.UserService = service.NewUserService(userRepository)
-	userController controller.UserController = controller.NewUserController(userService, jwtService)
-	authController controller.AuthController = controller.NewAuthController(jwtService, authService)
+	authService    service.AuthService         = service.NewAuthService(userRepository)
+	jwtService     service.Jwtservice          = service.NewJWTService()
+	userService    service.UserService         = service.NewUserService(userRepository)
+	userController controller.UserController   = controller.NewUserController(userService, jwtService)
+	authController controller.AuthController   = controller.NewAuthController(jwtService, authService)
 )
 
-func main (){
+func main() {
 	r := gin.Default()
 
 	authRoutes := r.Group("api/auth")
@@ -35,5 +35,8 @@ func main (){
 		userRoutes.GET("/profile", userController.Profile)
 	}
 
-	r.Run()
+	err := r.Run()
+	if err != nil {
+		return
+	}
 }

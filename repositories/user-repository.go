@@ -38,13 +38,13 @@ func hashAndSalt(pwd []byte) string {
 	return string(hash)
 }
 
-func(db *userConnection) InsertUser(user entity.User) entity.User {
+func (db *userConnection) InsertUser(user entity.User) entity.User {
 	user.Password = hashAndSalt([]byte(user.Password))
 	db.connection.Save(&user)
 	return user
 }
 
-func(db *userConnection) UpdateUser(user entity.User) entity.User {
+func (db *userConnection) UpdateUser(user entity.User) entity.User {
 	if user.Password != "" {
 		user.Password = hashAndSalt([]byte(user.Password))
 	} else {
@@ -56,28 +56,28 @@ func(db *userConnection) UpdateUser(user entity.User) entity.User {
 	return entity.User{}
 }
 
-func(db *userConnection) VerifyCredentials(email string, password string) interface{} {
+func (db *userConnection) VerifyCredentials(email string, password string) interface{} {
 	var user entity.User
 	res := db.connection.Where("email = ?", email).Take(&user)
-	if res.Error != nil {
-		return nil
+	if res.Error == nil {
+		return user
 	}
-	return user;
+	return nil
 }
 
-func(db *userConnection) IsDuplicateEmail(email string) (tx *gorm.DB) {
+func (db *userConnection) IsDuplicateEmail(email string) (tx *gorm.DB) {
 	var user entity.User
 	return db.connection.Where("email = ?", email).Take(&user)
 }
 
-func(db *userConnection) FindByEmail(email string) entity.User {
+func (db *userConnection) FindByEmail(email string) entity.User {
 	var user entity.User
 	db.connection.Where("email = ?", email).Take(&user)
 	return user
 }
 
-func(db *userConnection) ProfileUser(userId string) entity.User {
+func (db *userConnection) ProfileUser(userId string) entity.User {
 	var user entity.User
 	db.connection.Find(&user, userId)
-	return user 
+	return user
 }
