@@ -23,7 +23,7 @@ type userConnection struct {
 	connection *gorm.DB
 }
 
-//creates a new instance of UserRepository
+// NewUserRepository creates a new instance of UserRepository
 //throwing this error because I've not used this NewUserRepository method anywhere
 func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userConnection{connection: db}

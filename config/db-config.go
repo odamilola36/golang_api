@@ -11,9 +11,9 @@ import (
 )
 
 // openConnection to the database from the app
-func SetupDatabaseConnection() *gorm.DB{
+func SetupDatabaseConnection() *gorm.DB {
 	err := godotenv.Load()
-	if err != nil{
+	if err != nil {
 		panic("failed to load environment variables")
 	}
 
@@ -21,7 +21,6 @@ func SetupDatabaseConnection() *gorm.DB{
 	db_password := os.Getenv("db_pass")
 	dbHost := os.Getenv("db_host")
 	db_name := os.Getenv("db_name")
-
 
 	//root:Temi@tope48@tcp(localhost:3306)/golang_api?charset=utf8&parseTime=True&loc=Local
 	dsn := fmt.Sprint("%s:%s@tcp(%s:3306)/%s?charset=utf8&parseTime=True&loc=Local", db_user, db_password, dbHost, db_name)
@@ -37,7 +36,6 @@ func SetupDatabaseConnection() *gorm.DB{
 	db.AutoMigrate(entity.User{}, &entity.Book{})
 	return db
 }
-
 
 //close connection to the database form your app
 func CloseDatabaseConnection(db *gorm.DB) {
