@@ -22,12 +22,12 @@ func SetupDatabaseConnection() *gorm.DB {
 	dbHost := os.Getenv("db_host")
 	db_name := os.Getenv("db_name")
 
-	//root:Temi@tope48@tcp(localhost:3306)/golang_api?charset=utf8&parseTime=True&loc=Local
+
 	dsn := fmt.Sprint("%s:%s@tcp(%s:3306)/%s?charset=utf8&parseTime=True&loc=Local", db_user, db_password, dbHost, db_name)
 
 	//TODO format the dsn string
 	fmt.Println(dsn)
-	db, err := gorm.Open(mysql.Open("root:Temi@tope48@tcp(localhost:3306)/golang_api?charset=utf8&parseTime=True&loc=Local"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic("Failed to create a connection to database")
